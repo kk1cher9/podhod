@@ -56,6 +56,13 @@ button,input{font:inherit;color:inherit}button{cursor:pointer}
 .btn:disabled{opacity:.4}
 /* опрос */
 .scr.qm{display:flex;flex-direction:column}
+.qbody.inR{animation:qinR .34s cubic-bezier(.2,.8,.2,1) both}.qbody.inL{animation:qinL .34s cubic-bezier(.2,.8,.2,1) both}
+.qbody.outL,.qbody.outR{transition:opacity .16s ease-in,transform .16s ease-in;opacity:0}.qbody.outL{transform:translateX(-24px)}.qbody.outR{transform:translateX(24px)}
+@keyframes qinR{from{opacity:0;transform:translateX(32px)}}@keyframes qinL{from{opacity:0;transform:translateX(-32px)}}
+.scr.fade{animation:qfade .3s ease-out}@keyframes qfade{from{opacity:0;transform:translateY(8px)}}
+.prog i{transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.opt{transition:border-color .2s,background .2s,transform .12s}.opt:active{transform:scale(.98)}
+@media(prefers-reduced-motion:reduce){.qbody.inR,.qbody.inL,.scr.fade{animation:none}.qbody.outL,.qbody.outR{transition:none}}
 .scr.qm>*{flex:1 0 auto}
 .quiz{display:flex;flex-direction:column}
 .prog{height:6px;border-radius:3px;background:var(--soft);overflow:hidden;margin:4px 0 26px}.prog i{display:block;height:100%;background:var(--acc);transition:width .3s}
@@ -432,7 +439,8 @@ const Q=[
 {k:'lifts',q:'Какие веса ты поднимаешь?',lifts:1},
 {k:'time',q:'Во сколько удобно тренироваться?',time:1}
 ];
-let qi=0,draft={};
+let qi=0,draft={},qDir=0,qPrevW=0,qBusy=false;
+function leave(dir,fn){const b=scr.querySelector('.qbody');if(qBusy)return;if(!b||reduce){fn();return}qBusy=true;b.classList.add(dir>0?'outL':'outR');setTimeout(()=>{qBusy=false;fn()},160)}
 function renderQuiz(){const q=Q[qi],v=draft[q.k];bar.innerHTML=`<span class="logo"></span><span class="t">Подход</span><span class="note">${qi+1} из ${Q.length}</span>`;
   let body='';
   if(q.o)body=`<div class="opts">${q.o.map(([val,n,ic,sub])=>`<button class="opt ${v==val?'on':''}" data-val="${val}"><span class="ic">${ic}</span><span><b>${n}</b>${sub?`<small>${sub}</small>`:''}</span></button>`).join('')}</div>`;
@@ -443,23 +451,26 @@ function renderQuiz(){const q=Q[qi],v=draft[q.k];bar.innerHTML=`<span class="log
     ${L.none?'':`<div class="two" style="margin-top:10px"><label class="note">Вес, кг<input class="lin" data-k="${k}" data-f="w" type="number" inputmode="decimal" value="${L.w}" placeholder="60"></label><label class="note">Раз в подходе<input class="lin" data-k="${k}" data-f="r" type="number" inputmode="numeric" value="${L.r}" min="1" max="20"></label></div>`}</div>`}).join('')}</div>`}
   if(q.time)body=`<input id="tm" type="time" value="${v||'18:00'}" aria-label="Время"><div class="chips">${['07:00','12:00','18:00','20:00'].map(t=>`<button class="chip" data-t="${t}">${t}</button>`).join('')}</div>`;
   const last=qi===Q.length-1;
-  scr.innerHTML=`<div class="quiz"><div class="prog"><i style="width:${(qi+1)/Q.length*100}%"></i></div>${qi===0?say('Привет, я Гирик! Отвечай на вопросы — и я соберу тебе план.'):''}<h1>${q.q}</h1>${body}
+  const newW=(qi+1)/Q.length*100,fromW=qPrevW||newW,cls=qDir>0?'inR':qDir<0?'inL':'';qDir=0;qPrevW=newW;
+  scr.innerHTML=`<div class="quiz"><div class="prog"><i style="width:${fromW}%"></i></div><div class="qbody ${cls}">${qi===0?say('Привет, я Гирик! Отвечай на вопросы — и я соберу тебе план.'):''}<h1>${q.q}</h1>${body}</div>
   <div class="qnav"${qi?'':' style="grid-template-columns:1fr"'}>${qi?'<button class="iconb" id="qb" aria-label="Назад">←</button>':''}<button class="btn" id="qn" ${(q.o&&v==null)||(q.pick&&draft.wdays.length!==draft.days)?'disabled':''}>${last?'Готово, составить план':'Дальше'}</button></div></div>`;
-  if(q.o)scr.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{draft[q.k]=q.k==='days'?+b.dataset.val:b.dataset.val;renderQuiz();setTimeout(next,220)});
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{const i=scr.querySelector('.prog i');if(i)i.style.width=newW+'%'}));
+  if(q.o)scr.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(qBusy)return;draft[q.k]=q.k==='days'?+b.dataset.val:b.dataset.val;scr.querySelectorAll('.opt').forEach(x=>x.classList.toggle('on',x===b));$('qn').disabled=false;setTimeout(next,260)});
   if(q.num){const nv=$('nv'),rg=$('rg'),[mn,mx,stp]=q.num,set=x=>{x=Math.min(mx,Math.max(mn,Math.round(x/stp)*stp));draft[q.k]=x;nv.value=x;rg.value=x};set(+nv.value);
     nv.oninput=()=>{if(nv.value)draft[q.k]=+nv.value;rg.value=nv.value};nv.onchange=()=>set(+nv.value||q.num[3]);rg.oninput=()=>set(+rg.value);$('mi').onclick=()=>set(+nv.value-stp);$('pl').onclick=()=>set(+nv.value+stp)}
   if(q.time){draft.time=draft.time||'18:00';$('tm').onchange=e=>draft.time=e.target.value||'18:00';scr.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{draft.time=b.dataset.t;$('tm').value=b.dataset.t})}
   if(q.pick)bindPick(scr,draft.wdays,draft.days,renderQuiz);
   if(q.lifts){scr.querySelectorAll('[data-none]').forEach(b=>b.onclick=()=>{const L=draft.lifts[b.dataset.none];L.none=!L.none;renderQuiz()});
     scr.querySelectorAll('.lin').forEach(i=>i.oninput=()=>{draft.lifts[i.dataset.k][i.dataset.f]=i.value})}
-  $('qn').onclick=next;if($('qb'))$('qb').onclick=()=>{qi--;renderQuiz()};
+  $('qn').onclick=next;if($('qb'))$('qb').onclick=()=>leave(-1,()=>{qi--;qDir=-1;renderQuiz()});
 }
 function next(){const q=Q[qi];if(q.num){const [mn,mx]=q.num;const v=+draft[q.k];if(!(v>=mn&&v<=mx))return}
   if(q.o&&draft[q.k]==null)return;if(q.pick&&draft.wdays.length!==draft.days)return;
-  if(qi<Q.length-1){qi++;renderQuiz();return}
+  if(qi<Q.length-1){leave(1,()=>{qi++;qDir=1;renderQuiz()});return}
+  if(qBusy)return;
   delete draft.wdaysFor;S.profile=Object.assign({},draft,{start:(S.profile&&S.profile.start)||key(today())});save();
   bar.innerHTML=`<span class="logo"></span><span class="t">Подход</span>`;
-  scr.innerHTML=`<div style="padding-top:60px">${say('Анализирую вес, цель и график…')}</div>`;
+  leave(1,()=>{scr.innerHTML=`<div class="qbody inR" style="padding-top:60px">${say('Анализирую вес, цель и график…')}</div>`});
   setTimeout(()=>{location.hash='plan';route()},1100)}
 
 /* ================= план ================= */
@@ -652,7 +663,8 @@ function route(){stopAnim();closeSheet();let h=location.hash.slice(1)||'plan';if
   const tabs=v!=='quiz'&&v!=='ex'&&v!=='atlets';scr.classList.toggle('qm',v==='quiz');$('tabs').style.display=tabs?'':'none';scr.classList.toggle('noTab',!tabs);
   const TT={plan:'План',program:'Программа',tracker:'Трекер',profile:'Профиль'};
   if(tabs)bar.innerHTML=`<span class="logo"></span><span class="t">${TT[v]}</span>`;
-  if(v==='quiz')renderQuiz();if(v==='plan')renderPlan();if(v==='program')renderProgram();if(v==='tracker')renderTracker();if(v==='profile')renderProfile();if(v==='ex')renderEx(h.slice(3));if(v==='atlets')renderAtlets();
+  if(v!=='quiz'&&!reduce){scr.classList.remove('fade');void scr.offsetWidth;scr.classList.add('fade')}
+  if(v==='quiz'){qPrevW=0;renderQuiz()}if(v==='plan')renderPlan();if(v==='program')renderProgram();if(v==='tracker')renderTracker();if(v==='profile')renderProfile();if(v==='ex')renderEx(h.slice(3));if(v==='atlets')renderAtlets();
   document.querySelectorAll('#tabs a').forEach(a=>a.classList.toggle('on',a.dataset.v===v));
   scr.scrollTop=0}
 window.addEventListener('hashchange',route);
