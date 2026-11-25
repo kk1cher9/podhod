@@ -1,5 +1,5 @@
 // Подход: хранит файлы приложения, чтобы оно открывалось и без интернета
-const CACHE = 'podhod-v3';
+const CACHE = 'podhod-v4';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {

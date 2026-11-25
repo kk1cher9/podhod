@@ -35,7 +35,7 @@ button,input{font:inherit;color:inherit}button{cursor:pointer}
 :focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .app{max-width:440px;height:100%;height:100dvh;margin:auto;overflow:hidden;background:var(--bg);position:relative;display:flex;flex-direction:column}
 @media(min-width:520px){.app{height:calc(100dvh - 40px);margin:20px auto;border-radius:32px;border:1px solid var(--line);overflow:hidden;box-shadow:0 20px 60px rgb(0 0 0/.12)}}
-.bar{flex:none;position:relative;z-index:5;background:var(--bg);padding:calc(var(--st) + 12px) 18px 10px;display:flex;align-items:center;gap:10px;min-height:56px}
+.bar{flex:none;position:relative;z-index:5;background:var(--bg);padding:calc(var(--st) + 6px) 18px 8px;display:flex;align-items:center;gap:10px;min-height:56px}
 .bar .t{font:600 18px Unbounded,sans-serif;flex:1}
 .logo{width:12px;height:12px;border-radius:50%;background:var(--acc)}
 .iconb{width:44px;height:44px;border:0;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:20px}
@@ -55,7 +55,9 @@ button,input{font:inherit;color:inherit}button{cursor:pointer}
 .btn.ghost{background:var(--soft);color:var(--ink)}
 .btn:disabled{opacity:.4}
 /* опрос */
-.quiz{display:flex;flex-direction:column;min-height:100%}
+.scr.qm{display:flex;flex-direction:column}
+.scr.qm>*{flex:1 0 auto}
+.quiz{display:flex;flex-direction:column}
 .prog{height:6px;border-radius:3px;background:var(--soft);overflow:hidden;margin:4px 0 26px}.prog i{display:block;height:100%;background:var(--acc);transition:width .3s}
 .qn{font-size:14px;color:var(--mute);margin-bottom:6px}
 .opts{display:grid;gap:10px;margin-top:22px}
@@ -408,7 +410,7 @@ function bindPick(root,sel,n,redraw){root.querySelectorAll('[data-wd]').forEach(
 const tplFor=d=>{const i=plannedIdx(d);return i<0?null:SP().t[i]};
 
 /* ================= маскот ================= */
-const MASCOT=`<svg viewBox="0 0 80 80" aria-hidden="true"><path d="M26 30a14 14 0 1 1 28 0" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/><ellipse cx="40" cy="52" rx="26" ry="24" fill="var(--acc)"/><circle cx="31" cy="48" r="6" fill="#fff"/><circle cx="49" cy="48" r="6" fill="#fff"/><circle cx="32" cy="49" r="3" fill="#16171b"/><circle cx="50" cy="49" r="3" fill="#16171b"/><path d="M33 61q7-5 14 0" fill="none" stroke="#16171b" stroke-width="2.5" stroke-linecap="round"/><path d="M14 52q-8-4-6-14M66 52q8-4 6-14" stroke="var(--acc)" stroke-width="5" stroke-linecap="round" fill="none"/></svg>`;
+const MASCOT=`<svg viewBox="0 0 80 80" aria-hidden="true"><path d="M26 30a14 14 0 1 1 28 0" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/><ellipse cx="40" cy="52" rx="26" ry="24" fill="var(--acc)"/><circle cx="31" cy="48" r="6" fill="#fff"/><circle cx="49" cy="48" r="6" fill="#fff"/><circle cx="32" cy="49" r="3" fill="#16171b"/><circle cx="50" cy="49" r="3" fill="#16171b"/><path d="M33 60q7 5 14 0" fill="none" stroke="#16171b" stroke-width="2.5" stroke-linecap="round"/><path d="M14 52q-8-4-6-14M66 52q8-4 6-14" stroke="var(--acc)" stroke-width="5" stroke-linecap="round" fill="none"/></svg>`;
 const say=t=>`<div class="mascotLine">${MASCOT}<div class="bubble">${t}</div></div>`;
 
 /* ================= лист снизу ================= */
@@ -442,7 +444,7 @@ function renderQuiz(){const q=Q[qi],v=draft[q.k];bar.innerHTML=`<span class="log
   if(q.time)body=`<input id="tm" type="time" value="${v||'18:00'}" aria-label="Время"><div class="chips">${['07:00','12:00','18:00','20:00'].map(t=>`<button class="chip" data-t="${t}">${t}</button>`).join('')}</div>`;
   const last=qi===Q.length-1;
   scr.innerHTML=`<div class="quiz"><div class="prog"><i style="width:${(qi+1)/Q.length*100}%"></i></div>${qi===0?say('Привет, я Гирик! Отвечай на вопросы — и я соберу тебе план.'):''}<h1>${q.q}</h1>${body}
-  <div class="qnav">${qi?'<button class="iconb" id="qb" aria-label="Назад">←</button>':'<span></span>'}<button class="btn" id="qn" ${(q.o&&v==null)||(q.pick&&draft.wdays.length!==draft.days)?'disabled':''}>${last?'Готово, составить план':'Дальше'}</button></div></div>`;
+  <div class="qnav"${qi?'':' style="grid-template-columns:1fr"'}>${qi?'<button class="iconb" id="qb" aria-label="Назад">←</button>':''}<button class="btn" id="qn" ${(q.o&&v==null)||(q.pick&&draft.wdays.length!==draft.days)?'disabled':''}>${last?'Готово, составить план':'Дальше'}</button></div></div>`;
   if(q.o)scr.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{draft[q.k]=q.k==='days'?+b.dataset.val:b.dataset.val;renderQuiz();setTimeout(next,220)});
   if(q.num){const nv=$('nv'),rg=$('rg'),[mn,mx,stp]=q.num,set=x=>{x=Math.min(mx,Math.max(mn,Math.round(x/stp)*stp));draft[q.k]=x;nv.value=x;rg.value=x};set(+nv.value);
     nv.oninput=()=>{if(nv.value)draft[q.k]=+nv.value;rg.value=nv.value};nv.onchange=()=>set(+nv.value||q.num[3]);rg.oninput=()=>set(+rg.value);$('mi').onclick=()=>set(+nv.value-stp);$('pl').onclick=()=>set(+nv.value+stp)}
@@ -647,7 +649,7 @@ function renderAtlets(){bar.innerHTML=`<button class="iconb" id="back" aria-labe
 function rerender(){if(location.hash==='#tracker')renderTracker()}
 function route(){stopAnim();closeSheet();let h=location.hash.slice(1)||'plan';if(!S.profile&&h!=='quiz')h='quiz';
   let v=h.startsWith('ex-')?'ex':h;if(!['quiz','plan','program','tracker','profile','ex','atlets'].includes(v))v='plan';
-  const tabs=v!=='quiz'&&v!=='ex'&&v!=='atlets';$('tabs').style.display=tabs?'':'none';scr.classList.toggle('noTab',!tabs);
+  const tabs=v!=='quiz'&&v!=='ex'&&v!=='atlets';scr.classList.toggle('qm',v==='quiz');$('tabs').style.display=tabs?'':'none';scr.classList.toggle('noTab',!tabs);
   const TT={plan:'План',program:'Программа',tracker:'Трекер',profile:'Профиль'};
   if(tabs)bar.innerHTML=`<span class="logo"></span><span class="t">${TT[v]}</span>`;
   if(v==='quiz')renderQuiz();if(v==='plan')renderPlan();if(v==='program')renderProgram();if(v==='tracker')renderTracker();if(v==='profile')renderProfile();if(v==='ex')renderEx(h.slice(3));if(v==='atlets')renderAtlets();
