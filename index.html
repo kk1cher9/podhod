@@ -43,7 +43,7 @@ button,input{font:inherit;color:inherit}button{cursor:pointer}
 .scr.noTab{padding-bottom:calc(24px + var(--sb))}
 .scr *{touch-action:pan-y}
 .dsel,.dsel *{touch-action:pan-x}
-.tabs{flex:none;position:relative;z-index:6;display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border-top:1px solid var(--line);padding:6px 6px calc(6px + var(--sb))}
+.tabs{flex:none;position:relative;z-index:6;display:grid;grid-template-columns:repeat(5,1fr);background:var(--card);border-top:1px solid var(--line);padding:6px 6px calc(6px + var(--sb))}
 .tabs a{display:grid;justify-items:center;gap:2px;padding:6px 0;min-height:52px;color:var(--mute);text-decoration:none;font-size:12px;font-weight:500;border-radius:12px}
 .tabs a.on{color:var(--acc)}
 .tabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -64,7 +64,7 @@ button,input{font:inherit;color:inherit}button{cursor:pointer}
 @keyframes pgInR{from{opacity:0;transform:translateX(30px)}}@keyframes pgInL{from{opacity:0;transform:translateX(-30px)}}
 .bar.bIn>*{animation:bIn .3s ease-out both}@keyframes bIn{from{opacity:0;transform:translateY(-4px)}}
 .tabs{position:relative}.tabs a{position:relative;z-index:1;transition:color .25s}
-.tabind{position:absolute;z-index:0;top:6px;left:6px;width:calc((100% - 12px)/4);height:52px;border-radius:14px;background:var(--accs);transition:transform .42s cubic-bezier(.2,.9,.25,1.15)}
+.tabind{position:absolute;z-index:0;top:6px;left:6px;width:calc((100% - 12px)/5);height:52px;border-radius:14px;background:var(--accs);transition:transform .42s cubic-bezier(.2,.9,.25,1.15)}
 .tabs a.on svg{animation:tpop .4s cubic-bezier(.2,1.4,.4,1)}@keyframes tpop{40%{transform:scale(.82)}}
 .prog i{transition:width .45s cubic-bezier(.2,.8,.2,1)}
 .opt{transition:border-color .2s,background .2s,transform .12s}.opt:active{transform:scale(.98)}
@@ -156,6 +156,17 @@ table.hb{border-collapse:separate;border-spacing:0 6px;width:100%}
 .dgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:20px 0 8px}
 .dpk{min-height:56px;border-radius:14px;border:2px solid var(--line);background:var(--card);font:600 14px Unbounded,sans-serif;padding:0}
 .dpk.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.pgpick,.prg{display:grid;gap:2px;width:100%;text-align:left;margin-bottom:12px;font:inherit;color:inherit}.pgpick b,.prg b{font-size:17px}
+.prg{margin:0;cursor:pointer}.prg.on{border-color:var(--acc);background:var(--accs)}
+.chat{display:grid;gap:10px;padding-bottom:8px}
+.msg{display:flex;gap:8px;align-items:flex-end;max-width:88%}.msg svg{width:34px;height:34px;flex:none}
+.msg .bub{padding:10px 14px;border-radius:18px;font-size:15px;line-height:1.45}
+.msg.g .bub{background:var(--card);border:1px solid var(--line);border-bottom-left-radius:6px}
+.msg.u{margin-left:auto}.msg.u .bub{background:var(--acc);color:#fff;border-bottom-right-radius:6px}
+.chips2{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}.chips2 .chip{min-height:38px;padding:6px 12px;font-size:14px}
+.cin{position:sticky;bottom:0;display:grid;grid-template-columns:1fr 50px;gap:8px;padding:8px 0 2px;background:var(--bg)}
+.cin input{min-height:50px;border:1px solid var(--line);border-radius:16px;background:var(--card);padding:10px 14px;font-size:16px;color:var(--ink)}
+.cin .btn{min-height:50px;padding:0;font-size:20px}
 .alt{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:center;width:100%;text-align:left;border:0;border-top:1px solid var(--line);background:none;padding:10px 0}
 .alt svg{width:64px;height:48px;border-radius:12px;background:var(--soft)}
 .alt.cur .nm{color:var(--acc)}
@@ -169,6 +180,7 @@ table.hb{border-collapse:separate;border-spacing:0 6px;width:100%}
 <a href="#plan" data-v="plan"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>План</a>
 <a href="#program" data-v="program"><svg viewBox="0 0 24 24"><path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/></svg>Программа</a>
 <a href="#tracker" data-v="tracker"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>Трекер</a>
+<a href="#coach" data-v="coach"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10h.01M15 10h.01"/></svg>Гирик</a>
 <a href="#profile" data-v="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Профиль</a>
 </nav>
 </div>
@@ -376,7 +388,8 @@ const SPLIT={2:{d:[0,3],t:['fA','fB'],n:'всё тело'},3:{d:[0,2,4],t:['fA',
 const SCH={strength:[[5,'3–5','3 мин'],[3,'6–8','2 мин']],mass:[[4,'6–10','2 мин'],[3,'10–12','90 с']],aesth:[[3,'6–10','2 мин'],[3,'10–15','60–90 с']],shape:[[3,'10–12','90 с'],[3,'12–15','60 с']],fat:[[3,'12–15','60 с'],[3,'15–20','45 с']]};
 const GOALN={aesth:'Эстетика',strength:'Сила',mass:'Масса',shape:'Форма',fat:'Похудение'};
 const PRI=new Set(['lateral','incline','pullup','latpull']);
-function scheme(id){const p=S.profile,e=EX[id],r=SCH[p.goal][e.c?0:1];let sets=r[0];if(p.level==='new')sets=Math.max(2,sets-1);
+function scheme(id,tpl){const p=S.profile,e=EX[id],pr=PROGS[p.prog];let r=pr?(pr.heavy&&pr.heavy.includes(tpl)&&e.c?pr.hs:pr.sch[e.c?0:1]):SCH[p.goal][e.c?0:1];let sets=r[0];if(p.level==='new')sets=Math.max(2,sets-1);
+  if(pr)return {sets,reps:e.hold?'40–60 с':r[1],rest:r[2]};
   if(p.goal==='aesth'&&p.days>=5&&!PRI.has(id))sets=Math.max(2,sets-1);
   if(p.goal==='aesth'&&PRI.has(id)){sets++;if(id==='lateral')return {sets,reps:'12–20',rest:'60 с'}}
   return {sets,reps:e.hold?(p.goal==='strength'?'30–45 с':'40–60 с'):r[1],rest:r[2]}}
@@ -395,9 +408,9 @@ const rnd=(w,st,mn)=>Math.max(mn,Math.round(w/st)*st);
 const wStep=id=>{const t=(WB[id]||[])[2],w=+(S.myw[id]||0);return t==='db'||t==='db1'||t==='side'?(w<10?1:2):t==='mach'?5:t==='sled'?10:2.5};
 const isBwEx=id=>['bw','bwr','hold'].includes((WB[id]||[])[2]);
 function fmtW(id,w){const t=WB[id][2],n=String(w).replace('.',',');return isBwEx(id)?(w>0?`свой вес + ${n} кг`:'свой вес'):t==='bar'?`${n} кг`:t==='db'?`${n} кг в каждой руке`:t==='db1'?`${n} кг гантель`:t==='side'?`${n} кг на каждом блоке`:t==='sled'?`${n} кг на платформе`:`${n} кг в тренажёре`}
-function workW(id){const p=S.profile,bw=p.weight,B=WB[id];if(!B)return null;
+function workW(id,tpl){const p=S.profile,bw=p.weight,B=WB[id];if(!B)return null;
   if(S.myw[id]!=null)return {txt:fmtW(id,S.myw[id]),mine:true};const [g,c,t]=B,sf=sForce(g);
-  const top=+(String(scheme(id).reps).match(/(\d+)\D*$/)||[0,10])[1],rf=(1+12/30)/(1+(top+2)/30);
+  const top=+(String(scheme(id,tpl).reps).match(/(\d+)\D*$/)||[0,10])[1],rf=(1+12/30)/(1+(top+2)/30);
   const ref=WREF[id];let w,src=false;
   if(ref&&orm(ref[0])){w=orm(ref[0])*ref[1]/(1+(top+2)/30);src=true}else w=bw*c*sf*rf;
   if(t==='bw'){if(sf<.8)return {txt:`гравитрон, помощь ~${rnd(bw*(1-sf*.8),5,5)} кг`};if(sf>1.3)return {txt:`свой вес + ${rnd(bw*.15*(sf-1)/.3,2.5,2.5)} кг на поясе`};return {txt:'свой вес'}}
@@ -406,8 +419,23 @@ function workW(id){const p=S.profile,bw=p.weight,B=WB[id];if(!B)return null;
   const ez=id==='barcurl'||id==='french',txt=(t==='bar'?`~${rnd(w,2.5,ez?10:20)} кг${ez&&w<20?' (EZ-гриф)':''}`:t==='db'?`~${rnd(w,w<10?1:2,2)} кг в каждой руке`:t==='db1'?`~${rnd(w,w<10?1:2,2)} кг гантель`:t==='side'?`~${rnd(w,2.5,2.5)} кг на каждом блоке`:t==='sled'?`~${rnd(w,10,20)} кг на платформе`:`~${rnd(w,5,5)} кг в тренажёре`).replace(/(\d)\.(\d)/g,'$1,$2');
   return {txt,src,start}}
 const wTxt=x=>x?x.txt:'';
-const slotKey=(i,j)=>`${S.profile.goal==='aesth'?'a':''}${S.profile.days}-${i}-${j}`;
-const SP=()=>{const p=S.profile,b=p.goal==='aesth'?AES[p.days]:SPLIT[p.days];return {d:daysOf(),t:b.t,n:b.n}};
+const slotKey=(i,j)=>`${S.profile.prog?S.profile.prog+'-':S.profile.goal==='aesth'?'a':''}${S.profile.days}-${i}-${j}`;
+/* ================= программы атлетов ================= */
+Object.assign(T,{
+lLegH:['Ноги · тяжёлый',['squat','rdl','legpress','legcurl','calf']],lPushH:['Жим · тяжёлый',['bench','ohp','incline','lateral','pushdown']],lPullH:['Тяга · тяжёлый',['deadlift','pullup','row','facepull','barcurl']],
+lLegV:['Ноги · объём',['legpress','lunge','legext','legcurl','calf','legraise']],lPushV:['Жим · объём',['incline','dbpress','cross','lateral','dips','french']],lPullV:['Тяга · объём',['latpull','dbrow','cablerow','facepull','curl','hammer']],
+zCh:['Грудь и бицепс',['incline','bench','cross','curl','hammer']],zLeg:['Ноги',['squat','legpress','legext','legcurl','calf']],zSh:['Плечи',['dbpress','lateral','facepull','lateral','plank']],zBk:['Спина и трицепс',['pullup','row','latpull','pushdown','french']],zArm:['Руки и пресс',['barcurl','dips','hammer','pushdown','legraise']],
+fPull:['Тяга: спина и бицепс',['latpull','dbrow','cablerow','curl','hammer','crunch']],fLeg:['Ноги',['squat','legext','legcurl','calf','legraise']],fPush:['Жим: грудь, плечи, трицепс',['incline','dbbench','cross','dbpress','lateral','pushdown']],
+kA:['Верх: жимы',['incline','dbpress','lateral','dips','french']],kB:['Верх: тяги',['pullup','cablerow','facepull','curl','hammer']],kC:['Ноги и плечи',['squat','rdl','lateral','legraise']],
+cQ:['Ноги: квадрицепс',['squat','legpress','legext','lunge','calf']],cPu:['Жим',['incline','bench','cross','dbpress','lateral','pushdown']],cPl:['Тяга',['pullup','row','latpull','facepull','barcurl','hammer']],cH:['Ноги: задняя поверхность',['rdl','legcurl','hipthrust','legpress','calf']],cU:['Верх: детали',['dbbench','dbrow','lateral','dips','curl','french']]});
+const PROGS={
+laid:{n:'В стиле Дэвида Лейда',d:6,s:'Powerbuilding: жим / тяга / ноги два раза в неделю. Первые три дня тяжёлые (база на 3–5 повторов), следующие три — объёмные на рост мышц.',t:['lLegH','lPushH','lPullH','lLegV','lPushV','lPullV'],heavy:['lLegH','lPushH','lPullH'],sch:[[3,'8–10','2 мин'],[3,'10–12','90 с']],hs:[4,'3–5','3 мин']},
+zyzz:{n:'В стиле Zyzz',d:5,s:'Сплит на 5 дней с большим объёмом: каждая группа мышц в свой день, 4 подхода по 8–10, грудь начинается с наклонного жима.',t:['zCh','zLeg','zSh','zBk','zArm'],sch:[[4,'8–10','90 с'],[4,'8–12','60 с']]},
+zane:{n:'Классика Фрэнка Зейна',d:3,s:'Тяга / ноги / жим. Умеренные веса, медленный негатив, концентрация на сокращении — упор на симметрию.',t:['fPull','fLeg','fPush'],sch:[[3,'8–12','90 с'],[3,'10–15','60 с']]},
+kino:{n:'В стиле Kinobody',d:3,s:'Минимум времени: 3 тренировки, обратная пирамида — первый подход самый тяжёлый, дальше вес −10% и +2 повтора. Цель — плечи ×1,618 от талии.',t:['kA','kB','kC'],sch:[[3,'5 → 7 → 9','3 мин'],[3,'8–12','90 с']]},
+cbum:{n:'В стиле Криса Бамстеда',d:5,s:'Классика: 3 дня тренировок, 1 отдых. Ноги делятся на квадрицепс и заднюю поверхность, основная работа 8–15 повторов.',t:['cQ','cPu','cPl','cH','cU'],sch:[[3,'8–12','2 мин'],[3,'10–15','60–90 с']]}};
+
+const SP=()=>{const p=S.profile,pr=PROGS[p.prog];if(pr)return {d:daysOf(),t:pr.t,n:pr.n};const b=p.goal==='aesth'?AES[p.days]:SPLIT[p.days];return {d:daysOf(),t:b.t,n:b.n}};
 const exAt=(i,j)=>{const t=SP().t[i];return S.swaps[slotKey(i,j)]||T[t][1][j]};
 
 /* ================= даты ================= */
@@ -524,15 +552,22 @@ let progDay=null,curSlot=null;
 function renderProgram(){const p=S.profile,sp=SP();
   if(progDay==null){const i=plannedIdx(today());progDay=i>=0?i:0}
   const t=sp.t[progDay];
-  scr.innerHTML=`<div class="dsel">${sp.t.map((x,i)=>`<button class="${i===progDay?'on':''}" data-d="${i}">${DN[sp.d[i]]} · ${T[x][0].split(':')[0]}</button>`).join('')}</div>
+  scr.innerHTML=`<button class="card pgpick" id="pgp"><span class="note">Программа</span><b>${PROGS[p.prog]?PROGS[p.prog].n:'Подобрана по опросу'}</b><span class="note">${sp.t.length} ${sp.t.length<5?'дня':'дней'} в неделю · сменить ›</span></button><div class="dsel">${sp.t.map((x,i)=>`<button class="${i===progDay?'on':''}" data-d="${i}">${DN[sp.d[i]]} · ${T[x][0].split(':')[0]}</button>`).join('')}</div>
   <div class="card"><h2>${T[t][0]}</h2><p class="note" style="margin:4px 0 6px">${DN[sp.d[progDay]]}, ${p.time}. Нажми на упражнение — откроется техника, ⇄ — замена.</p>
-  ${T[t][1].map((_,j)=>{const id=exAt(progDay,j),e=EX[id],s=scheme(id);return `<div class="exr"><button class="exb" data-slot="${j}">${pic(id)}<span><span class="nm">${e.n}</span><span class="sr"><b>${s.sets} × ${s.reps}</b> · отдых ${s.rest}${workW(id)?`<br><b style="color:var(--ink)">${wTxt(workW(id))}</b>${workW(id).mine?' <span class="pill">твой</span>':''}`:''}</span></span></button><button class="swap" data-sw="${j}" aria-label="Сменить упражнение">${SWAPI}</button></div>`}).join('')}
+  ${T[t][1].map((_,j)=>{const id=exAt(progDay,j),e=EX[id],s=scheme(id,t);return `<div class="exr"><button class="exb" data-slot="${j}">${pic(id)}<span><span class="nm">${e.n}</span><span class="sr"><b>${s.sets} × ${s.reps}</b> · отдых ${s.rest}${workW(id,t)?`<br><b style="color:var(--ink)">${wTxt(workW(id,t))}</b>${workW(id,t).mine?' <span class="pill">твой</span>':''}`:''}</span></span></button><button class="swap" data-sw="${j}" aria-label="Сменить упражнение">${SWAPI}</button></div>`}).join('')}
   ${p.goal==='fat'?'<div class="cardio">+ Кардио 20–25 мин: дорожка в горку или велотренажёр, пульс 120–140.</div>':''}</div>
   <p class="note" style="margin-top:12px">Первые 1–2 подхода — разминочные с лёгким весом${p.level==='new'?'. Новичку: бери вес, с которым остаётся 2–3 повтора в запасе':''}.</p>`;
-  scr.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{progDay=+b.dataset.d;renderProgram()});
+  scr.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{progDay=+b.dataset.d;renderProgram()});$('pgp').onclick=openProgs;
   scr.querySelectorAll('[data-slot]').forEach(b=>b.onclick=()=>{curSlot=[progDay,+b.dataset.slot];location.hash='ex-'+exAt(progDay,+b.dataset.slot)});
   scr.querySelectorAll('[data-sw]').forEach(b=>b.onclick=()=>openSwap(progDay,+b.dataset.sw));
 }
+function openProgs(){const p=S.profile,cur=p.prog||'';
+  openSheet(`<h2>Выбери программу</h2><p class="note" style="margin:4px 0 10px">Программы «в стиле» собраны по интервью и разборам атлетов — это не их официальные планы. Рабочие веса и замены упражнений работают везде.</p>
+  <div class="stack">${[['', 'Подобрана по опросу', `${p.daysAuto||p.days} дн. · под цель «${GOALN[p.goal]}»`, 'Программа из твоих ответов в опросе.'],...Object.entries(PROGS).map(([k,v])=>[k,v.n,`${v.d} ${v.d<5?'дня':'дней'} в неделю`,v.s])].map(([k,n,d,txt])=>`<button class="card prg ${k===cur?'on':''}" data-prog="${k}"><b>${n}${k===cur?' ✓':''}</b><span class="note">${d}</span><span style="font-size:14px">${txt}</span></button>`).join('')}</div>
+  <button class="btn ghost" id="pcl" style="margin-top:12px">Отмена</button>`);
+  $('pcl').onclick=closeSheet;
+  sbody.querySelectorAll('[data-prog]').forEach(b=>b.onclick=()=>{const k=b.dataset.prog;if(k){if(!p.prog)p.daysAuto=p.days;p.prog=k;p.days=PROGS[k].d}else{if(p.daysAuto)p.days=p.daysAuto;delete p.prog;delete p.daysAuto}
+    if(!p.wdays||p.wdays.length!==p.days)delete p.wdays;save();closeSheet();progDay=null;renderProgram()})}
 function openSwap(i,j){const cur=exAt(i,j),t=SP().t[i],orig=T[t][1][j];
   openSheet(`<h2>Сменить упражнение</h2><p class="note" style="margin:4px 0 8px">Варианты на ту же группу мышц.</p>
   ${ALTS(cur).map(id=>{const e=EX[id];return `<button class="alt ${id===cur?'cur':''}" data-pick="${id}">${pic(id)}<span><span class="nm">${e.n}${id===cur?' · сейчас':''}${id===orig&&id!==cur?' · исходное':''}</span><span class="sr">${e.m.join(', ')}</span></span></button>`}).join('')}
@@ -543,7 +578,7 @@ function openSwap(i,j){const cur=exAt(i,j),t=SP().t[i],orig=T[t][1][j];
 }
 
 /* ================= упражнение ================= */
-function renderEx(id){const e=EX[id];if(!e){location.hash='program';return}const s=scheme(id);
+function renderEx(id){const e=EX[id];if(!e){location.hash='program';return}const exTpl=curSlot&&exAt(curSlot[0],curSlot[1])===id?SP().t[curSlot[0]]:undefined,s=scheme(id,exTpl);
   bar.innerHTML=`<button class="iconb" id="back" aria-label="Назад">←</button><span class="t" style="font-size:16px">Техника</span>`;
   $('back').onclick=()=>{location.hash='program'};
   const slotOk=curSlot&&exAt(curSlot[0],curSlot[1])===id;
@@ -563,7 +598,7 @@ function renderEx(id){const e=EX[id];if(!e){location.hash='program';return}const
   if(slotOk)$('swx').onclick=()=>openSwap(curSlot[0],curSlot[1]);
   drawW(id,false);
 }
-function drawW(id,edit){const box=$('wcard');if(!box)return;const x=workW(id);if(!x){box.innerHTML='';return}
+function drawW(id,edit){const box=$('wcard');if(!box)return;const x=workW(id,curSlot&&exAt(curSlot[0],curSlot[1])===id?SP().t[curSlot[0]]:undefined);if(!x){box.innerHTML='';return}
   const bwx=isBwEx(id),isBw=/свой вес|гравитрон/.test(x.txt),st=wStep(id),cur=S.myw[id];
   if(edit){box.innerHTML=`<div class="card" style="margin-bottom:12px;border-color:var(--acc)"><h3>${bwx?'Дополнительный вес на поясе':'Твой рабочий вес'}</h3>
     <p class="note" style="margin:4px 0 8px">${bwx?'0 — если делаешь со своим весом.':'Вес, с которым делаешь рабочие подходы'+({db:' (одна гантель)',side:' (на одном блоке)',sled:' (без веса салазок)'}[WB[id][2]]||'')+'.'}</p>
@@ -650,7 +685,7 @@ const ATL=[
 ['Майк Исраэтел (RP)','Приоритет верху груди, ширине спины и средним дельтам; ноги и руки на поддерживающем объёме.','Порядок приоритетов: эти мышцы получают +1 подход и идут первыми.']];
 const RULES=[['V-силуэт в приоритете','Средние дельты, верх груди и широчайшие — по +1 подходу, махи в стороны 3–4 раза в неделю.'],['Каждая мышца 2 раза в неделю','Исследования показывают, что 2 тренировки мышцы в неделю дают больше роста, чем 1, при равном объёме.'],['10–20 подходов на мышцу','Ориентир — 12–20 рабочих подходов в неделю на приоритетные мышцы, ~10 на остальные.'],['База 6–10, изоляция 10–15','Махи до 20 повторов. Негатив 2–3 секунды, до отказа 1–2 повтора.'],['Тяг не меньше, чем жимов','Ширина спины и задние дельты делают силуэт и осанку.'],['Узкая талия = низкий жир','Пропорция плечи/талия зависит от питания не меньше, чем от тренировок.']];
 const MN={chest:'Грудь',upback:'Спина',delt:'Дельты',bi:'Бицепс',tri:'Трицепс',quad:'Квадрицепсы',ham:'Бицепс бедра',glute:'Ягодицы',calf:'Икры',abs:'Пресс',lowback:'Поясница',fore:'Предплечья'};
-function volume(){const v={};const sp=SP();sp.t.forEach((t,i)=>T[t][1].forEach((_,j)=>{const id=exAt(i,j),n=scheme(id).sets,h=EX[id].hl;h[0].forEach(m=>v[m]=(v[m]||0)+n);(h[1]||[]).forEach(m=>v[m]=(v[m]||0)+n/2)}));
+function volume(){const v={};const sp=SP();sp.t.forEach((t,i)=>T[t][1].forEach((_,j)=>{const id=exAt(i,j),n=scheme(id,t).sets,h=EX[id].hl;h[0].forEach(m=>v[m]=(v[m]||0)+n);(h[1]||[]).forEach(m=>v[m]=(v[m]||0)+n/2)}));
   return Object.entries(v).sort((a,b)=>b[1]-a[1])}
 function renderAtlets(){bar.innerHTML=`<button class="iconb" id="back" aria-label="Назад">←</button><span class="t" style="font-size:16px">Разбор атлетов</span>`;$('back').onclick=()=>{location.hash='plan'};
   const vol=volume(),mx=Math.max(20,...vol.map(x=>x[1]));
@@ -663,11 +698,62 @@ function renderAtlets(){bar.innerHTML=`<button class="iconb" id="back" aria-labe
   <p class="note" style="margin-top:14px">Программы атлетов собраны из открытых интервью и разборов; многие «сплиты знаменитостей» в интернете — реконструкции фанатов.</p>`;
   if($('toA'))$('toA').onclick=()=>{S.profile.goal='aesth';save();progDay=null;location.hash='program'}}
 
+/* ================= чат с Гириком ================= */
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function nums(){const p=S.profile,bmi=p.weight/((p.height/100)**2),bmr=10*p.weight+6.25*p.height-5*p.age+(p.sex==='m'?5:-161),act={2:1.375,3:1.45,4:1.55,5:1.6,6:1.7}[p.days]||1.5,adj={strength:150,mass:300,shape:-150,fat:-400,aesth:bmi<22?200:-300}[p.goal];
+  return {kcal:Math.round((bmr*act+adj)/10)*10,prot:Math.round(p.weight*(p.goal==='fat'?2:1.8)),water:(p.weight*.033).toFixed(1).replace('.',',')}}
+function dayTxt(d,label){const tp=tplFor(d);if(!tp)return `${label} по плану отдых. Восстановление — тоже часть прогресса: сон, белок, прогулка.`;
+  const i=plannedIdx(d);return `${label} — «${T[tp][0]}» в ${S.profile.time}:\n`+T[tp][1].map((_,j)=>{const id=exAt(i,j),s=scheme(id,tp),w=workW(id,tp);return `• ${EX[id].n} — ${s.sets}×${s.reps}${w?', '+w.txt:''}`}).join('\n')}
+const SUG=['Что сегодня?','Сколько калорий?','Болят мышцы','Как прибавлять вес?','Какие есть программы?'];
+const RULES2=[
+[/^(привет|здравств|хай|йо|ку|добр)/,()=>'Привет! Как ты сегодня — бодрый или так себе?'],
+[/(как дела|как ты|как сам)/,()=>'У меня всё отлично — я же гиря, мне только тяжелее становиться! А ты как?'],
+[/(кто ты|ты кто|что умеешь)/,()=>'Я Гирик — твой карманный тренер. Знаю твою программу, веса и цифры. Спрашивай про тренировку на сегодня, питание, боль в мышцах, прогресс, сон, кардио или программы атлетов.'],
+[/(отлично|супер|бодр|хорошо|норм|класс|огонь)/,()=>'Красавчик! '+dayTxt(today(),'Сегодня')],
+[/(устал|нет сил|вымотан|лень|не хочу)/,()=>'Бывает. Правило: приди и сделай хотя бы разминку и первое упражнение. Если через 10 минут всё равно тяжело — сделай половину подходов и иди спать пораньше. Если усталость держится неделю — сделай лёгкую неделю: те же упражнения, вес −20–30%.'],
+[/(болит|боль|крепатур|ноет|тянет)/,()=>'Если мышцы тупо ноют через день после тренировки — это нормальная крепатура, проходит за 2–3 дня; помогают лёгкая разминка, прогулка и сон. Тренировать ту же мышцу можно, если боль слабая.\n\nНо если боль острая, в суставе, со щелчком, отёком или не проходит неделю — прекрати нагружать это место и покажись врачу.'],
+[/(завтра)/,()=>{const d=today();d.setDate(d.getDate()+1);return dayTxt(d,'Завтра')}],
+[/(сегодня|какая трен|что делать|что качаем|тренировка)/,()=>dayTxt(today(),'Сегодня')],
+[/(калори|ккал|сколько есть)/,()=>{const n=nums();return `Тебе нужно около ${n.kcal} ккал в день под цель «${GOALN[S.profile.goal]}». Если за 2 недели вес не меняется в нужную сторону — сдвинь на 150–200 ккал.`}],
+[/(бел(ок|ка|ку)|протеин)/,()=>`Норма белка для тебя — около ${nums().prot} г в день. Это примерно: 200 г курицы (≈45 г), 3 яйца (≈18 г), 200 г творога (≈34 г), порция протеина (≈25 г). Дели на 3–5 приёмов.`],
+[/(вод)/,()=>`Пей около ${nums().water} л воды в день, в день тренировки — плюс 0,5 л.`],
+[/(сон|спать|высып)/,()=>'Спи 7–9 часов. Мышцы растут, пока ты восстанавливаешься, а недосып снижает силу и тормозит прогресс.'],
+[/(креатин)/,()=>'Креатин моногидрат — одна из самых изученных добавок: 3–5 г в день, каждый день, в любое время. Загрузка не обязательна. Если есть проблемы с почками — сначала спроси врача.'],
+[/(кардио|бег|ходьб|шаг)/,()=>S.profile.goal==='fat'?'Для похудения: 20–25 минут кардио после силовой и 8–10 тысяч шагов в день. Но главное — дефицит калорий.':'Лёгкое кардио 2–3 раза по 20 минут полезно для сердца и восстановления и не мешает росту мышц. Шаги 7–10 тысяч в день — отличная база.'],
+[/(живот|пресс|бок|жир)/,()=>'Сжечь жир локально в одном месте нельзя — упражнения на пресс укрепляют мышцы, но жир уходит со всего тела за счёт дефицита калорий. Пресс станет видно, когда процент жира снизится.'],
+[/(разминк)/,()=>'Разминка: 5 минут лёгкого кардио, вращения суставами, затем 1–2 лёгких подхода первого упражнения (50% и 70% рабочего веса).'],
+[/(отдых|между подход|сколько отдых)/,()=>'Между подходами: в базовых 2–3 минуты, в изоляции 60–90 секунд. Точное время написано у каждого упражнения в программе.'],
+[/(прибав|прогресс|застой|плато|не растёт|не растет)/,()=>'Прибавляй, когда во всех подходах сделал верхнюю границу повторов с запасом: штанга +2,5 кг, гантели +1–2 кг. Если 3 недели нет прогресса — проверь сон и калории, а затем сделай лёгкую неделю.'],
+[/(до трен|перед трен|после трен|питани|что есть|что поесть)/,()=>'За 1–2 часа до тренировки — углеводы и немного белка (рис/овсянка + курица/творог). После — белок 25–40 г и углеводы в течение пары часов.'],
+[/(пропуст|пропуск)/,()=>'Один пропуск ничего не ломает. Просто сделай следующую тренировку по плану, не пытайся «догнать» двумя сразу. В трекере нажми «Нет» — и я подберу тренировку дома или на отдыхе.'],
+[/(программ|лейд|laid|zyzz|зизз|зейн|zane|бамстед|cbum|kinobody|кинободи)/,()=>'Есть программы в стиле: '+Object.values(PROGS).map(v=>v.n.replace('В стиле ','').replace('Классика ',''))+'. Открой «Программа» → «сменить» вверху, там описание каждой.'],
+[/(спасибо|спс|благодар)/,()=>'Всегда пожалуйста! Иди качайся 💪'.replace(' 💪','.')]];
+const nrm=t=>t.toLowerCase().replace(/ё/g,'е');
+function findEx(q){const qs=nrm(q).split(/[^а-яa-z]+/).filter(w=>w.length>=3);let best=null,bs=0;
+  for(const [id,e] of Object.entries(EX)){const ns=nrm(e.n).split(/[^а-яa-z]+/).filter(w=>w.length>=3);let sc=0;for(const n of ns){const a=n.slice(0,Math.min(n.length,5));if(qs.some(w=>w.startsWith(a.slice(0,Math.max(3,Math.min(a.length,w.length))))&&a.startsWith(w.slice(0,3))))sc++}if(sc>bs){bs=sc;best=id}}return bs?best:null}
+function answer2(q){q=q.toLowerCase().trim();
+  const exId=/(вес|кг|сколько|техник|как делать|правильно)/.test(q)&&findEx(q);
+  if(exId){const e=EX[exId],w=workW(exId),s=scheme(exId);return `${e.n}: ${s.sets}×${s.reps}${w?', рабочий вес '+w.txt:''}. Качает: ${e.m.join(', ')}. Главное в технике: ${e.st[2]}`}
+  for(const [re,fn] of RULES2)if(re.test(q))return fn();
+  const ex=findEx(q);if(ex){const e=EX[ex];return `${e.n}. Совет: ${e.tip}`}
+  return 'Пока я понимаю простые вопросы — про тренировку на сегодня или завтра, калории, белок, воду, сон, боль в мышцах, прогресс, кардио, программы и веса в упражнениях. Попробуй спросить по-другому.'}
+function chatPush(from,t){S.chat=S.chat||[];S.chat.push({f:from,t});S.chat=S.chat.slice(-60);save()}
+function renderCoach(){S.chat=S.chat||[];const tk=key(today());
+  if(S.chatDay!==tk){S.chatDay=tk;chatPush('g',`Привет${S.chat.length?' снова':''}! Как ты сегодня?`)}
+  const last=S.chat[S.chat.length-1];
+  scr.innerHTML=`<div class="chat" id="chat">${S.chat.map(m=>m.f==='g'?`<div class="msg g">${MASCOT}<div class="bub">${esc(m.t).replace(/\n/g,'<br>')}</div></div>`:`<div class="msg u"><div class="bub">${esc(m.t)}</div></div>`).join('')}</div>
+  <div class="chips2">${(last&&/как ты/i.test(last.t)?['Отлично 💪','Нормально','Устал','Что-то болит']:SUG).map(x=>`<button class="chip" data-q="${esc(x)}">${esc(x.replace(' 💪',''))}</button>`).join('')}</div>
+  <form class="cin" id="cin"><input id="cq" placeholder="Спроси Гирика…" autocomplete="off" enterkeyhint="send" aria-label="Вопрос"><button class="btn" aria-label="Отправить">↑</button></form>`;
+  scr.scrollTop=scr.scrollHeight;
+  const ask=q=>{q=q.replace(' 💪','').trim();if(!q)return;chatPush('u',q);chatPush('g',answer2(q));renderCoach()};
+  scr.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>ask(b.dataset.q));
+  $('cin').onsubmit=e=>{e.preventDefault();ask($('cq').value)}}
+
 /* ================= роутинг ================= */
 function rerender(){if(location.hash==='#tracker')renderTracker()}
-let curV=null,navTok=0,swipeNav=false;const ORDER={plan:0,program:1,tracker:2,profile:3},DEEP=new Set(['ex','atlets']);
+let curV=null,navTok=0,swipeNav=false;const ORDER={plan:0,program:1,tracker:2,coach:3,profile:4},DEEP=new Set(['ex','atlets']);
 function route(){stopAnim();closeSheet();let h=location.hash.slice(1)||'plan';if(!S.profile&&h!=='quiz')h='quiz';
-  let v=h.startsWith('ex-')?'ex':h;if(!['quiz','plan','program','tracker','profile','ex','atlets'].includes(v))v='plan';
+  let v=h.startsWith('ex-')?'ex':h;if(!['quiz','plan','program','tracker','coach','profile','ex','atlets'].includes(v))v='plan';
   const prev=curV;curV=v;
   const dir=prev==null||v==='quiz'||prev==='quiz'?0:DEEP.has(v)&&!DEEP.has(prev)?1:DEEP.has(prev)&&!DEEP.has(v)?-1:DEEP.has(v)?1:Math.sign(ORDER[v]-ORDER[prev]);
   if(v in ORDER)$('tabind').style.transform=`translateX(${ORDER[v]*100}%)`;
@@ -675,9 +761,9 @@ function route(){stopAnim();closeSheet();let h=location.hash.slice(1)||'plan';if
   const tok=++navTok;
   const paint=()=>{if(tok!==navTok)return;
     const tabs=v!=='quiz'&&v!=='ex'&&v!=='atlets';scr.classList.toggle('qm',v==='quiz');$('tabs').style.display=tabs?'':'none';scr.classList.toggle('noTab',!tabs);
-    const TT={plan:'План',program:'Программа',tracker:'Трекер',profile:'Профиль'};
+    const TT={plan:'План',program:'Программа',tracker:'Трекер',coach:'Гирик',profile:'Профиль'};
     if(tabs)bar.innerHTML=`<span class="logo"></span><span class="t">${TT[v]}</span>`;
-    if(v==='quiz'){qPrevW=0;renderQuiz()}if(v==='plan')renderPlan();if(v==='program')renderProgram();if(v==='tracker')renderTracker();if(v==='profile')renderProfile();if(v==='ex')renderEx(h.slice(3));if(v==='atlets')renderAtlets();
+    if(v==='quiz'){qPrevW=0;renderQuiz()}if(v==='plan')renderPlan();if(v==='program')renderProgram();if(v==='tracker')renderTracker();if(v==='profile')renderProfile();if(v==='ex')renderEx(h.slice(3));if(v==='atlets')renderAtlets();if(v==='coach')renderCoach();
     scr.scrollTop=0;scr.classList.remove('pgOutL','pgOutR','pgInL','pgInR');bar.classList.remove('bIn');
     if(!reduce&&prev!=null){void scr.offsetWidth;if(dir)scr.classList.add(dir>0?'pgInR':'pgInL');if(dir||v==='quiz')bar.classList.add('bIn')}};
   const sn=swipeNav;swipeNav=false;
@@ -685,7 +771,7 @@ function route(){stopAnim();closeSheet();let h=location.hash.slice(1)||'plan';if
   scr.classList.remove('pgInL','pgInR');scr.classList.add(dir>0?'pgOutL':'pgOutR');setTimeout(paint,150)}
 window.addEventListener('hashchange',route);
 /* свайп пальцем между страницами */
-const TABV=['plan','program','tracker','profile'];
+const TABV=['plan','program','tracker','coach','profile'];
 function swTarget(dx){const v=curV;if(v in ORDER){const i=ORDER[v]+(dx<0?1:-1);return TABV[i]||null}
   if(DEEP.has(v)&&dx>0)return v==='atlets'?'plan':'program';return null}
 let sw=null;
