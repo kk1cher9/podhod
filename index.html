@@ -153,6 +153,7 @@ table.hb{border-collapse:separate;border-spacing:0 6px;width:100%}
 .mlist li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
 .mlist b{white-space:nowrap}
 .lin{display:block;width:100%;min-height:48px;margin-top:4px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:8px 12px;font-size:17px;color:var(--ink)}
+.dn{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.dn .chip{padding:0;font-weight:700}.dn .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .dgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:20px 0 8px}
 .dpk{min-height:56px;border-radius:14px;border:2px solid var(--line);background:var(--card);font:600 14px Unbounded,sans-serif;padding:0}
 .dpk.on{background:var(--acc);border-color:var(--acc);color:#fff}
@@ -436,14 +437,24 @@ zCh:['Грудь и бицепс',['incline','bench','cross','curl','hammer']],z
 fPull:['Тяга: спина и бицепс',['latpull','dbrow','cablerow','curl','hammer','crunch']],fLeg:['Ноги',['squat','legext','legcurl','calf','legraise']],fPush:['Жим: грудь, плечи, трицепс',['incline','dbbench','cross','dbpress','lateral','pushdown']],
 kA:['Верх: жимы',['incline','dbpress','lateral','dips','french']],kB:['Верх: тяги',['pullup','cablerow','facepull','curl','hammer']],kC:['Ноги и плечи',['squat','rdl','lateral','legraise']],
 cQ:['Ноги: квадрицепс',['squat','legpress','legext','lunge','calf']],cPu:['Жим',['incline','bench','cross','dbpress','lateral','pushdown']],cPl:['Тяга',['pullup','row','latpull','facepull','barcurl','hammer']],cH:['Ноги: задняя поверхность',['rdl','legcurl','hipthrust','legpress','calf']],cU:['Верх: детали',['dbbench','dbrow','lateral','dips','curl','french']]});
+Object.assign(T,{lF1:['Всё тело · тяжёлый',['squat','bench','row','lateral','plank']],lF2:['Всё тело · объём',['deadlift','incline','latpull','legext','curl','pushdown']],
+zPush:['Грудь, плечи, трицепс',['incline','bench','lateral','pushdown','dips']],zPull:['Спина и бицепс',['pullup','row','latpull','curl','hammer']],zU:['Верх',['incline','pullup','lateral','curl','pushdown']],
+fU:['Верх',['incline','latpull','dbpress','dbrow','curl','pushdown']],kAB:['Верх',['incline','pullup','dbpress','lateral','curl']],
+cUp:['Верх',['incline','pullup','dbpress','dbrow','lateral','curl']],cLw:['Ноги',['squat','rdl','legpress','legcurl','calf']]});
+const PV={laid:{2:['lF1','lF2'],3:['lPushH','lPullH','lLegH'],4:['lPushH','lLegH','lPullH','lPushV'],5:['lPushH','lPullH','lLegH','lPushV','lPullV']},
+zyzz:{2:['zU','zLeg'],3:['zPush','zPull','zLeg'],4:['zCh','zBk','zLeg','zSh'],6:['zCh','zBk','zLeg','zSh','zArm','zCh']},
+zane:{2:['fU','fLeg'],4:['fPull','fLeg','fPush','fPull'],5:['fPull','fLeg','fPush','fPull','fLeg'],6:['fPull','fLeg','fPush','fPull','fLeg','fPush']},
+kino:{2:['kAB','kC'],4:['kA','kC','kB','kC'],5:['kA','kB','kC','kA','kB'],6:['kA','kB','kC','kA','kB','kC']},
+cbum:{2:['cUp','cLw'],3:['cPu','cPl','cQ'],4:['cQ','cPu','cH','cPl'],6:['cQ','cPu','cPl','cH','cU','cPu']}};
 const PROGS={
-laid:{n:'В стиле Дэвида Лейда',d:6,s:'Powerbuilding: жим / тяга / ноги два раза в неделю. Первые три дня тяжёлые (база на 3–5 повторов), следующие три — объёмные на рост мышц.',t:['lLegH','lPushH','lPullH','lLegV','lPushV','lPullV'],heavy:['lLegH','lPushH','lPullH'],sch:[[3,'8–10','2 мин'],[3,'10–12','90 с']],hs:[4,'3–5','3 мин']},
+laid:{n:'В стиле Дэвида Лейда',d:6,s:'Powerbuilding: жим / тяга / ноги два раза в неделю. Первые три дня тяжёлые (база на 3–5 повторов), следующие три — объёмные на рост мышц.',t:['lLegH','lPushH','lPullH','lLegV','lPushV','lPullV'],heavy:['lLegH','lPushH','lPullH','lF1'],sch:[[3,'8–10','2 мин'],[3,'10–12','90 с']],hs:[4,'3–5','3 мин']},
 zyzz:{n:'В стиле Zyzz',d:5,s:'Сплит на 5 дней с большим объёмом: каждая группа мышц в свой день, 4 подхода по 8–10, грудь начинается с наклонного жима.',t:['zCh','zLeg','zSh','zBk','zArm'],sch:[[4,'8–10','90 с'],[4,'8–12','60 с']]},
 zane:{n:'Классика Фрэнка Зейна',d:3,s:'Тяга / ноги / жим. Умеренные веса, медленный негатив, концентрация на сокращении — упор на симметрию.',t:['fPull','fLeg','fPush'],sch:[[3,'8–12','90 с'],[3,'10–15','60 с']]},
 kino:{n:'В стиле Kinobody',d:3,s:'Минимум времени: 3 тренировки, обратная пирамида — первый подход самый тяжёлый, дальше вес −10% и +2 повтора. Цель — плечи ×1,618 от талии.',t:['kA','kB','kC'],sch:[[3,'5 → 7 → 9','3 мин'],[3,'8–12','90 с']]},
 cbum:{n:'В стиле Криса Бамстеда',d:5,s:'Классика: 3 дня тренировок, 1 отдых. Ноги делятся на квадрицепс и заднюю поверхность, основная работа 8–15 повторов.',t:['cQ','cPu','cPl','cH','cU'],sch:[[3,'8–12','2 мин'],[3,'10–15','60–90 с']]}};
 
-const SP=()=>{const p=S.profile,pr=PROGS[p.prog];if(pr)return {d:daysOf(),t:pr.t,n:pr.n};const b=p.goal==='aesth'?AES[p.days]:SPLIT[p.days];return {d:daysOf(),t:b.t,n:b.n}};
+const progT=(k,d)=>(PV[k]&&PV[k][d])||(PROGS[k].d===d?PROGS[k].t:PROGS[k].t.slice(0,d));
+const SP=()=>{const p=S.profile,pr=PROGS[p.prog];if(pr)return {d:daysOf(),t:progT(p.prog,p.days),n:pr.n};const b=p.goal==='aesth'?AES[p.days]:SPLIT[p.days];return {d:daysOf(),t:b.t,n:b.n}};
 const exAt=(i,j)=>{const t=SP().t[i];return S.swaps[slotKey(i,j)]||T[t][1][j]};
 
 /* ================= даты ================= */
@@ -546,13 +557,14 @@ function renderPlan(){const p=S.profile,bmi=p.weight/((p.height/100)**2);
   <a class="btn" href="#program" style="margin-top:10px">Открыть программу</a>`;
   $('edd').onclick=openDays;
   if($('waist'))$('waist').oninput=e=>{const w=+e.target.value;p.waist=w||null;save();$('gold').textContent=w>40?Math.round(w*1.618):'—'}}
-function openDays(){const p=S.profile,sel=daysOf().slice();let tm=p.time;
-  const draw=()=>{openSheet(`<h2>Дни и время тренировок</h2><p class="note" style="margin:4px 0 0">Отметь ${p.days} ${p.days<5?'дня':'дней'}. Программа встанет на новые дни по порядку.</p>${pickHTML(sel,p.days)}
+function openDays(){const p=S.profile;let n=p.days,sel=daysOf().slice(),tm=p.time;
+  const draw=()=>{openSheet(`<h2>Дни и время тренировок</h2><p class="note" style="margin:6px 0 6px">Сколько дней в неделю</p><div class="seg dn">${[2,3,4,5,6].map(x=>`<button class="chip ${x===n?'on':''}" data-n="${x}">${x}</button>`).join('')}</div>
+  <p class="note" style="margin:12px 0 0">Отметь ${n} ${n<5?'дня':'дней'}. Программа${p.prog?' «'+PROGS[p.prog].n+'»':''} перестроится под это количество.</p>${pickHTML(sel,n)}
   <label class="note" style="display:block;margin-top:6px">Время<input id="dtm" type="time" value="${tm}" style="display:block;width:100%;min-height:48px;margin-top:6px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:8px 12px;font-size:17px"></label>
-  <div class="stack" style="margin-top:14px"><button class="btn" id="dsv" ${sel.length!==p.days?'disabled':''}>Сохранить</button><button class="btn ghost" id="dcl">Отмена</button></div>
-  <p class="note" style="margin-top:10px">Другое количество дней — пройди опрос заново во вкладке «Профиль».</p>`);
-  $('dtm').onchange=e=>tm=e.target.value||tm;bindPick(sbody,sel,p.days,draw);$('dcl').onclick=closeSheet;
-  $('dsv').onclick=()=>{p.wdays=sel.slice();p.time=tm;save();closeSheet();progDay=null;renderPlan()}};draw()}
+  <div class="stack" style="margin-top:14px"><button class="btn" id="dsv" ${sel.length!==n?'disabled':''}>Сохранить</button><button class="btn ghost" id="dcl">Отмена</button></div>`);
+  sbody.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{n=+b.dataset.n;sel=SPLIT[n].d.slice();draw()});
+  $('dtm').onchange=e=>tm=e.target.value||tm;bindPick(sbody,sel,n,draw);$('dcl').onclick=closeSheet;
+  $('dsv').onclick=()=>{p.days=n;p.wdays=sel.slice();p.time=tm;save();closeSheet();progDay=null;renderPlan()}};draw()}
 
 /* ================= программа ================= */
 const SWAPI='<svg viewBox="0 0 24 24"><path d="M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></svg>';
@@ -570,11 +582,11 @@ function renderProgram(){const p=S.profile,sp=SP();
   scr.querySelectorAll('[data-sw]').forEach(b=>b.onclick=()=>openSwap(progDay,+b.dataset.sw));
 }
 function openProgs(){const p=S.profile,cur=p.prog||'';
-  openSheet(`<h2>Выбери программу</h2><p class="note" style="margin:4px 0 10px">Программы «в стиле» собраны по интервью и разборам атлетов — это не их официальные планы. Рабочие веса и замены упражнений работают везде.</p>
-  <div class="stack">${[['', 'Подобрана по опросу', `${p.daysAuto||p.days} дн. · под цель «${GOALN[p.goal]}»`, 'Программа из твоих ответов в опросе.'],...Object.entries(PROGS).map(([k,v])=>[k,v.n,`${v.d} ${v.d<5?'дня':'дней'} в неделю`,v.s])].map(([k,n,d,txt])=>`<button class="card prg ${k===cur?'on':''}" data-prog="${k}"><b>${n}${k===cur?' ✓':''}</b><span class="note">${d}</span><span style="font-size:14px">${txt}</span></button>`).join('')}</div>
+  openSheet(`<h2>Выбери программу</h2><p class="note" style="margin:4px 0 10px">Каждая программа подстраивается под твои ${p.days} ${p.days<5?'дня':'дней'} в неделю — их можно поменять в «Плане» или опросе. Программы «в стиле» собраны по интервью и разборам атлетов — это не их официальные планы. Рабочие веса и замены упражнений работают везде.</p>
+  <div class="stack">${[['', 'Подобрана по опросу', `под цель «${GOALN[p.goal]}»`, 'Программа из твоих ответов в опросе.'],...Object.entries(PROGS).map(([k,v])=>[k,v.n,`подстроена под ${p.days} ${p.days<5?'дня':'дней'}: ${progT(k,p.days).map(t=>T[t][0].split(/[:·]/)[0].trim()).join(' / ')}`,v.s])].map(([k,n,d,txt])=>`<button class="card prg ${k===cur?'on':''}" data-prog="${k}"><b>${n}${k===cur?' ✓':''}</b><span class="note">${d}</span><span style="font-size:14px">${txt}</span></button>`).join('')}</div>
   <button class="btn ghost" id="pcl" style="margin-top:12px">Отмена</button>`);
   $('pcl').onclick=closeSheet;
-  sbody.querySelectorAll('[data-prog]').forEach(b=>b.onclick=()=>{const k=b.dataset.prog;if(k){if(!p.prog)p.daysAuto=p.days;p.prog=k;p.days=PROGS[k].d}else{if(p.daysAuto)p.days=p.daysAuto;delete p.prog;delete p.daysAuto}
+  sbody.querySelectorAll('[data-prog]').forEach(b=>b.onclick=()=>{const k=b.dataset.prog;if(p.daysAuto){p.days=p.daysAuto;delete p.daysAuto}if(k)p.prog=k;else delete p.prog;
     if(!p.wdays||p.wdays.length!==p.days)delete p.wdays;save();closeSheet();progDay=null;renderProgram()})}
 function openSwap(i,j){const cur=exAt(i,j),t=SP().t[i],orig=T[t][1][j];
   openSheet(`<h2>Сменить упражнение</h2><p class="note" style="margin:4px 0 8px">Варианты на ту же группу мышц.</p>
