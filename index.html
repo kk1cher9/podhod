@@ -100,7 +100,8 @@ input[type=time]{display:block;margin:34px auto 18px;font:600 48px Unbounded,san
 .day .tm{font-weight:700;color:var(--acc);white-space:nowrap}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
-.stat b{display:block;font:600 24px Unbounded,sans-serif;white-space:nowrap}.stat span{color:var(--mute);font-size:13px}
+.stat b{display:block;font:600 24px Unbounded,sans-serif;white-space:nowrap}
+.stat.ps b{font-size:clamp(17px,5vw,21px)}.stat.ps b.gl{font-size:clamp(14px,4.2vw,17px);white-space:normal;overflow-wrap:anywhere;line-height:1.25;padding:3px 0}.stat span{color:var(--mute);font-size:13px}
 /* программа */
 .dsel{display:flex;gap:8px;overflow-x:auto;overscroll-behavior:none;margin:6px -18px 14px;padding:0 18px;scrollbar-width:none}
 .dsel button{flex:none;min-height:44px;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:500}
@@ -631,7 +632,7 @@ function checkMissed(){const t=today();for(let i=1;i<=7;i++){const d=new Date(t)
 /* ================= профиль ================= */
 function renderProfile(){const p=S.profile;
   scr.innerHTML=`${say('Изменились вес или цель? Пройди опрос заново — я пересоберу план.')}
-  <div class="card stack"><div class="stats" style="margin:0"><div class="stat"><b>${p.weight} кг</b><span>вес</span></div><div class="stat"><b>${p.height} см</b><span>рост</span></div><div class="stat"><b>${GOALN[p.goal]}</b><span>цель</span></div><div class="stat"><b>${p.days} дн.</b><span>в неделю, ${p.time}</span></div></div></div>
+  <div class="card stack"><div class="stats" style="margin:0"><div class="stat ps"><b>${String(p.weight).replace('.',',')} кг</b><span>вес</span></div><div class="stat ps"><b>${p.height} см</b><span>рост</span></div><div class="stat ps"><b class="gl">${GOALN[p.goal]}</b><span>цель</span></div><div class="stat ps"><b>${p.days} дн.</b><span>в неделю, ${p.time}</span></div></div></div>
   <div class="stack" style="margin-top:14px"><button class="btn" id="redo">Пройти опрос заново</button><button class="btn ghost" id="rsw">Вернуть исходные упражнения</button></div>
   <p class="note" style="margin-top:14px">Данные хранятся только в этом браузере на этом устройстве.</p>`;
   $('redo').onclick=()=>{draft=Object.assign({},S.profile);qi=0;location.hash='quiz'};
