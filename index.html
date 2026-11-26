@@ -664,7 +664,7 @@ function renderAtlets(){bar.innerHTML=`<button class="iconb" id="back" aria-labe
 
 /* ================= роутинг ================= */
 function rerender(){if(location.hash==='#tracker')renderTracker()}
-let curV=null,navTok=0;const ORDER={plan:0,program:1,tracker:2,profile:3},DEEP=new Set(['ex','atlets']);
+let curV=null,navTok=0,swipeNav=false;const ORDER={plan:0,program:1,tracker:2,profile:3},DEEP=new Set(['ex','atlets']);
 function route(){stopAnim();closeSheet();let h=location.hash.slice(1)||'plan';if(!S.profile&&h!=='quiz')h='quiz';
   let v=h.startsWith('ex-')?'ex':h;if(!['quiz','plan','program','tracker','profile','ex','atlets'].includes(v))v='plan';
   const prev=curV;curV=v;
@@ -679,9 +679,28 @@ function route(){stopAnim();closeSheet();let h=location.hash.slice(1)||'plan';if
     if(v==='quiz'){qPrevW=0;renderQuiz()}if(v==='plan')renderPlan();if(v==='program')renderProgram();if(v==='tracker')renderTracker();if(v==='profile')renderProfile();if(v==='ex')renderEx(h.slice(3));if(v==='atlets')renderAtlets();
     scr.scrollTop=0;scr.classList.remove('pgOutL','pgOutR','pgInL','pgInR');bar.classList.remove('bIn');
     if(!reduce&&prev!=null){void scr.offsetWidth;if(dir)scr.classList.add(dir>0?'pgInR':'pgInL');if(dir||v==='quiz')bar.classList.add('bIn')}};
-  if(!dir||reduce||prev===v&&v!=='ex'){paint();return}
+  const sn=swipeNav;swipeNav=false;
+  if(!dir||reduce||sn||prev===v&&v!=='ex'){paint();return}
   scr.classList.remove('pgInL','pgInR');scr.classList.add(dir>0?'pgOutL':'pgOutR');setTimeout(paint,150)}
 window.addEventListener('hashchange',route);
+/* свайп пальцем между страницами */
+const TABV=['plan','program','tracker','profile'];
+function swTarget(dx){const v=curV;if(v in ORDER){const i=ORDER[v]+(dx<0?1:-1);return TABV[i]||null}
+  if(DEEP.has(v)&&dx>0)return v==='atlets'?'plan':'program';return null}
+let sw=null;
+scr.addEventListener('touchstart',e=>{sw=null;if(e.touches.length!==1||sheet.classList.contains('on')||curV==='quiz'||e.target.closest('.dsel,input,.num,.stage'))return;
+  const t=e.touches[0];sw={x:t.clientX,y:t.clientY,t0:Date.now(),dx:0,lock:null}},{passive:true});
+scr.addEventListener('touchmove',e=>{if(!sw)return;const t=e.touches[0],dx=t.clientX-sw.x,dy=t.clientY-sw.y;
+  if(sw.lock===null&&(Math.abs(dx)>10||Math.abs(dy)>10))sw.lock=Math.abs(dx)>Math.abs(dy)*1.2?'x':'y';
+  if(sw.lock!=='x')return;e.preventDefault();const W=scr.clientWidth,tg=swTarget(dx),d=tg?dx:dx*.22;sw.dx=dx;
+  scr.style.transition='none';scr.style.transform=`translateX(${d}px)`;scr.style.opacity=1-Math.min(.45,Math.abs(d)/W*.55);
+  if(curV in ORDER&&tg){$('tabind').style.transition='none';$('tabind').style.transform=`translateX(${(ORDER[curV]-dx/W)*100}%)`}},{passive:false});
+function swEnd(){if(!sw||sw.lock!=='x'){sw=null;return}const W=scr.clientWidth,dx=sw.dx,tg=swTarget(dx),vel=Math.abs(dx)/Math.max(1,Date.now()-sw.t0);sw=null;
+  const ti=$('tabind');ti.style.transition='';
+  if(tg&&(Math.abs(dx)>W*.28||vel>.45)){scr.style.transition='transform .18s ease-in,opacity .18s ease-in';scr.style.transform=`translateX(${Math.sign(dx)*W*.45}px)`;scr.style.opacity='0';
+    setTimeout(()=>{scr.style.transition='';scr.style.transform='';scr.style.opacity='';swipeNav=true;location.hash=tg},170)}
+  else{scr.style.transition='transform .3s cubic-bezier(.2,.9,.3,1.2),opacity .3s';scr.style.transform='';scr.style.opacity='';if(curV in ORDER)ti.style.transform=`translateX(${ORDER[curV]*100}%)`;setTimeout(()=>{scr.style.transition=''},320)}}
+scr.addEventListener('touchend',swEnd);scr.addEventListener('touchcancel',swEnd);
 /* без зума, жестов и прокрутки всей страницы */
 for(const ev of ['gesturestart','gesturechange','gestureend'])document.addEventListener(ev,e=>e.preventDefault(),{passive:false});
 let tY=0,tX=0;document.addEventListener('touchstart',e=>{if(e.touches.length===1){tY=e.touches[0].clientY;tX=e.touches[0].clientX}},{passive:true});
