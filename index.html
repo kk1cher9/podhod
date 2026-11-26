@@ -59,10 +59,16 @@ button,input{font:inherit;color:inherit}button{cursor:pointer}
 .qbody.inR{animation:qinR .34s cubic-bezier(.2,.8,.2,1) both}.qbody.inL{animation:qinL .34s cubic-bezier(.2,.8,.2,1) both}
 .qbody.outL,.qbody.outR{transition:opacity .16s ease-in,transform .16s ease-in;opacity:0}.qbody.outL{transform:translateX(-24px)}.qbody.outR{transform:translateX(24px)}
 @keyframes qinR{from{opacity:0;transform:translateX(32px)}}@keyframes qinL{from{opacity:0;transform:translateX(-32px)}}
-.scr.fade{animation:qfade .3s ease-out}@keyframes qfade{from{opacity:0;transform:translateY(8px)}}
+.scr.pgOutL,.scr.pgOutR{transition:opacity .15s ease-in,transform .15s ease-in;opacity:0}.scr.pgOutL{transform:translateX(-20px)}.scr.pgOutR{transform:translateX(20px)}
+.scr.pgInR{animation:pgInR .38s cubic-bezier(.2,.8,.2,1) both}.scr.pgInL{animation:pgInL .38s cubic-bezier(.2,.8,.2,1) both}
+@keyframes pgInR{from{opacity:0;transform:translateX(30px)}}@keyframes pgInL{from{opacity:0;transform:translateX(-30px)}}
+.bar.bIn>*{animation:bIn .3s ease-out both}@keyframes bIn{from{opacity:0;transform:translateY(-4px)}}
+.tabs{position:relative}.tabs a{position:relative;z-index:1;transition:color .25s}
+.tabind{position:absolute;z-index:0;top:6px;left:6px;width:calc((100% - 12px)/4);height:52px;border-radius:14px;background:var(--accs);transition:transform .42s cubic-bezier(.2,.9,.25,1.15)}
+.tabs a.on svg{animation:tpop .4s cubic-bezier(.2,1.4,.4,1)}@keyframes tpop{40%{transform:scale(.82)}}
 .prog i{transition:width .45s cubic-bezier(.2,.8,.2,1)}
 .opt{transition:border-color .2s,background .2s,transform .12s}.opt:active{transform:scale(.98)}
-@media(prefers-reduced-motion:reduce){.qbody.inR,.qbody.inL,.scr.fade{animation:none}.qbody.outL,.qbody.outR{transition:none}}
+@media(prefers-reduced-motion:reduce){.qbody.inR,.qbody.inL,.scr.pgInR,.scr.pgInL,.bar.bIn>*,.tabs a.on svg{animation:none}.tabind,.scr.pgOutL,.scr.pgOutR{transition:none}.qbody.outL,.qbody.outR{transition:none}}
 .scr.qm>*{flex:1 0 auto}
 .quiz{display:flex;flex-direction:column}
 .prog{height:6px;border-radius:3px;background:var(--soft);overflow:hidden;margin:4px 0 26px}.prog i{display:block;height:100%;background:var(--acc);transition:width .3s}
@@ -158,7 +164,7 @@ table.hb{border-collapse:separate;border-spacing:0 6px;width:100%}
 <div class="app">
 <div class="bar" id="bar"></div>
 <main class="scr" id="scr"></main>
-<nav class="tabs" id="tabs">
+<nav class="tabs" id="tabs"><i class="tabind" id="tabind" aria-hidden="true"></i>
 <a href="#plan" data-v="plan"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>План</a>
 <a href="#program" data-v="program"><svg viewBox="0 0 24 24"><path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/></svg>Программа</a>
 <a href="#tracker" data-v="tracker"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>Трекер</a>
@@ -658,15 +664,23 @@ function renderAtlets(){bar.innerHTML=`<button class="iconb" id="back" aria-labe
 
 /* ================= роутинг ================= */
 function rerender(){if(location.hash==='#tracker')renderTracker()}
+let curV=null,navTok=0;const ORDER={plan:0,program:1,tracker:2,profile:3},DEEP=new Set(['ex','atlets']);
 function route(){stopAnim();closeSheet();let h=location.hash.slice(1)||'plan';if(!S.profile&&h!=='quiz')h='quiz';
   let v=h.startsWith('ex-')?'ex':h;if(!['quiz','plan','program','tracker','profile','ex','atlets'].includes(v))v='plan';
-  const tabs=v!=='quiz'&&v!=='ex'&&v!=='atlets';scr.classList.toggle('qm',v==='quiz');$('tabs').style.display=tabs?'':'none';scr.classList.toggle('noTab',!tabs);
-  const TT={plan:'План',program:'Программа',tracker:'Трекер',profile:'Профиль'};
-  if(tabs)bar.innerHTML=`<span class="logo"></span><span class="t">${TT[v]}</span>`;
-  if(v!=='quiz'&&!reduce){scr.classList.remove('fade');void scr.offsetWidth;scr.classList.add('fade')}
-  if(v==='quiz'){qPrevW=0;renderQuiz()}if(v==='plan')renderPlan();if(v==='program')renderProgram();if(v==='tracker')renderTracker();if(v==='profile')renderProfile();if(v==='ex')renderEx(h.slice(3));if(v==='atlets')renderAtlets();
+  const prev=curV;curV=v;
+  const dir=prev==null||v==='quiz'||prev==='quiz'?0:DEEP.has(v)&&!DEEP.has(prev)?1:DEEP.has(prev)&&!DEEP.has(v)?-1:DEEP.has(v)?1:Math.sign(ORDER[v]-ORDER[prev]);
+  if(v in ORDER)$('tabind').style.transform=`translateX(${ORDER[v]*100}%)`;
   document.querySelectorAll('#tabs a').forEach(a=>a.classList.toggle('on',a.dataset.v===v));
-  scr.scrollTop=0}
+  const tok=++navTok;
+  const paint=()=>{if(tok!==navTok)return;
+    const tabs=v!=='quiz'&&v!=='ex'&&v!=='atlets';scr.classList.toggle('qm',v==='quiz');$('tabs').style.display=tabs?'':'none';scr.classList.toggle('noTab',!tabs);
+    const TT={plan:'План',program:'Программа',tracker:'Трекер',profile:'Профиль'};
+    if(tabs)bar.innerHTML=`<span class="logo"></span><span class="t">${TT[v]}</span>`;
+    if(v==='quiz'){qPrevW=0;renderQuiz()}if(v==='plan')renderPlan();if(v==='program')renderProgram();if(v==='tracker')renderTracker();if(v==='profile')renderProfile();if(v==='ex')renderEx(h.slice(3));if(v==='atlets')renderAtlets();
+    scr.scrollTop=0;scr.classList.remove('pgOutL','pgOutR','pgInL','pgInR');bar.classList.remove('bIn');
+    if(!reduce&&prev!=null){void scr.offsetWidth;if(dir)scr.classList.add(dir>0?'pgInR':'pgInL');if(dir||v==='quiz')bar.classList.add('bIn')}};
+  if(!dir||reduce||prev===v&&v!=='ex'){paint();return}
+  scr.classList.remove('pgInL','pgInR');scr.classList.add(dir>0?'pgOutL':'pgOutR');setTimeout(paint,150)}
 window.addEventListener('hashchange',route);
 /* без зума, жестов и прокрутки всей страницы */
 for(const ev of ['gesturestart','gesturechange','gestureend'])document.addEventListener(ev,e=>e.preventDefault(),{passive:false});
